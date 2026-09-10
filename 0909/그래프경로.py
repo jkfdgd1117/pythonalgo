@@ -1,23 +1,28 @@
 def go(start):
-    
+    visited[start] = 1
+    for way in nodes[start]:
+        if visited[way] == 0:
+            go(way)
 T = int(input())
 for tc in range(1, T+1):
     V, E = map(int, input().split())
-    graph = []
+    nodes = [[] for _ in range(V+1)]
     for _ in range(E):
-        graph.append(list(map(int, input().split())))
+        fr, to = map(int, input().split())
+        nodes[fr].append(to)
     S, G = map(int, input().split())
-    visited = [0]*(V)
-    go(S-1)
-    if visited[G-1]:
+    visited = [0]*(V+1)
+    go(S)
+    if visited[G]:
         ans = 1
     else:
         ans = 0
+    print(f'#{tc} {ans}')
 
 
 """
 
-3
+1
 6 5
 1 4
 1 3
