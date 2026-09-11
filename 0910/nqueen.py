@@ -1,40 +1,51 @@
 dr = [0, 1, 1, 1, 0, -1, -1, -1] 
 dc = [1, 1, 0, -1, -1, -1, 0, 1]
 def start(r, c):
-    global queens, valid
-    if board[r][c] == 1 or board[r][c] == 2:
+    global queens, valid, ans, board
+    if queens == N:
+        ans += 1
+        print(*board, sep='\n')
+        print('='*10)
+        queens = 0
+        return
+    if board[r][c] in (1, 2):
+        start(r, c+1)
         return
     else:
         board[r][c] = 2
         queens += 1
-        for i in range(8):
+        valid = True
+        for i in range(8): 
             if valid:
-                tenkai(r, c, i)
-            return
+                tenkai(r+dr[i], c+dc[i], i)
+        start(r+1, 1)        
     return
+
 def tenkai(r, c, d):
-    global valid
-    if board[r][c] == 2:
-        valid = False
+    global valid, board
+    if board[r][c] == 3:
         return
     elif board[r][c] == 1:
         tenkai(r+dr[d], c+dc[d], d)
-    elif board[r][c] == 3:
+    elif board[r][c] == 2:
+        valid = False
         return
     elif board[r][c] == 0:
         board[r][c] = 1
         tenkai(r+dr[d], c+dc[d], d)
 
-    
+
 T = int(input())
 for tc in range(1, T+1):
     N = int(input())
-    board = [[3]*(N+2)]
-    board += [[3] + [0]*N + [3] for _ in range(N)]
-    board.append([3]*(N+2))
-    queens = 0
-    valid = True
-    start(1, 1)
+    ans = 0
+    for i in range(N):
+        queens = 0
+        board = [[3]*(N+2)]
+        board += [[3] + [0]*N + [3] for _ in range(N)]
+        board.append([3]*(N+2))
+        start(1, 1+i)
+    print(f'#{tc} {ans}')
 
 
 """
@@ -52,5 +63,21 @@ for tc in range(1, T+1):
 2면 케이스 폐기
 3이면 영역전개 중지
 
+0 1 2 3 4 5 6 7 8 9
 
+1 1
+
+2 0
+
+3 0
+
+4 2
+
+5
+
+6
+
+7
+
+8
 """
