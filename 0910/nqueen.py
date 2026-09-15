@@ -1,83 +1,42 @@
-dr = [0, 1, 1, 1, 0, -1, -1, -1] 
-dc = [1, 1, 0, -1, -1, -1, 0, 1]
-def start(r, c):
-    global queens, valid, ans, board
-    if queens == N:
+def go(w, num):
+    global ans
+    if len(path) == num:
         ans += 1
-        print(*board, sep='\n')
-        print('='*10)
-        queens = 0
         return
-    if board[r][c] in (1, 2):
-        start(r, c+1)
+    if not hubos[w]:
         return
-    else:
-        board[r][c] = 2
-        queens += 1
+    for x in hubos[w]:
         valid = True
-        for i in range(8): 
-            if valid:
-                tenkai(r+dr[i], c+dc[i], i)
-        start(r+1, 1)        
-    return
-
-def tenkai(r, c, d):
-    global valid, board
-    if board[r][c] == 3:
-        return
-    elif board[r][c] == 1:
-        tenkai(r+dr[d], c+dc[d], d)
-    elif board[r][c] == 2:
-        valid = False
-        return
-    elif board[r][c] == 0:
-        board[r][c] = 1
-        tenkai(r+dr[d], c+dc[d], d)
-
+        for prev_w in range(w):
+            prev_i = path[prev_w]
+            if x == prev_i:
+                valid = False
+                break
+            if abs(x - prev_i) == abs(w - prev_w):
+                valid = False
+                break
+        if valid:   
+            path.append(x)
+            go(w+1, num)
+            path.pop()
 
 T = int(input())
 for tc in range(1, T+1):
     N = int(input())
+    hubos = [[i for i in range(N)] for _ in range(N)]
+    path = []
     ans = 0
-    for i in range(N):
-        queens = 0
-        board = [[3]*(N+2)]
-        board += [[3] + [0]*N + [3] for _ in range(N)]
-        board.append([3]*(N+2))
-        start(1, 1+i)
+    go(0, N)
     print(f'#{tc} {ans}')
 
-
 """
-0 : 아무것도없는곳
-1 : 어떤 퀸 범위 안에 드는곳
-2 : 퀸 있는곳
-3 : 패딩
-체스판 전부 돌면서 퀸 놓을자리 탐색
-0이면 퀸 설치 -> 퀸 범위따라 1로 영역전개 후 다음 
-나머지면 패스
+0~N-1까지의 숫자를 1차원 배열에 넣음(열마다 몇번째 행에 퀸 놓는지)
+[0, 0, ... 0, 0]
+i 넣으면 다음칸부터 i-1, i-2... 와 i와 i+1, i+2 ...가 금지숫자
+2i-j
+첫 칸에 0~ N-1 넣으면서 경우의 수 탐색
+j번칸에 숫자 채운다음 그 이후칸들 금지숫자 갱신
+마지막칸 도착 안했는데 가능한숫자 None이면 폐기
+다찾으면 경우의수 +1
 
-영역전개 해나가다가
-0이면 1로 변경
-1이면 패스
-2면 케이스 폐기
-3이면 영역전개 중지
-
-0 1 2 3 4 5 6 7 8 9
-
-1 1
-
-2 0
-
-3 0
-
-4 2
-
-5
-
-6
-
-7
-
-8
 """
