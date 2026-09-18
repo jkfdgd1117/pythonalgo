@@ -1,13 +1,13 @@
 T = int(input())
 for test_case in range(1, T+1):
     N = int(input())
-    mid = int(N/2)
+    mid = N // 2
     bat = []
     for i in range(N):
-        bat += input().split()
+        bat.append(list(input()))
     sum = 0
-    for y in range(N):
-        for x in range(N):
-           if (abs(x-mid) + abs(y-mid) <= mid):
-               sum += int(bat[y][x])
+    for r in range(N):
+        for c in range(N):
+           if (abs(c-mid) + abs(r-mid) <= mid):
+               sum += int(bat[r][c])
     print(f'#{test_case} {sum}')
