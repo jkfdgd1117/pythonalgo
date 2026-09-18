@@ -1,20 +1,24 @@
 def dist(A, B): # 점 A와 B의 거리 반환
     return abs(A[0]-B[0])+abs(A[1]-B[1])
 
-def visit(now): # customers로 만들 수 있는 길이 N의 순열의 가짓수
+def visit(total): # customers로 만들 수 있는 길이 N의 순열의 가짓수
     global ans
-    if len(route) == N-1:
-        localsum = 0
-        for i in range(0, N-2): # 01, 12, 23, 34 ... 910
-            localsum += dist(route[i], route[i+1])
-        localsum += dist(route[-1], home)
-        if ans > localsum:
-            ans = localsum
-        return 
-    for j in range(j, N+1):
-        route.append(j)
-        visit(now+1)
+    if total >= ans:
+        return
+    if len(route) == N+1:
+        total += dist(route[-1], home)
+        if ans > total:
+            ans = total
+        return
+    for j in range(0, N):
+        if customers[j] not in route:
+            route.append(customers[j])
+        else:
+            continue
+        visit(total+dist(route[-2], route[-1]))
         route.pop()
+
+
 T = int(input())
 for tc in range(1, T+1):
     N = int(input())
@@ -25,8 +29,8 @@ for tc in range(1, T+1):
     for i in range(4, N*2+3, 2): # 4 6 8 10 ... N*2 N*2+2
         customers.append([arr[i], arr[i+1]])
     route = [work] # 길이 : N+1 (마지막에 home이랑 거리잴거임)
-
     ans = 99999
+    visit(0)
     print(f'#{tc} {ans}')
 
 
