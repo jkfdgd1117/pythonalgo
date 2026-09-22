@@ -1,3 +1,5 @@
+from collections import deque
+
 dr = [0, 1, 0, -1]
 dc = [1, 0, -1, 0]
 
@@ -11,26 +13,6 @@ pipe = [[],
     [2, 3]         # 7: 상 좌
 ]
 
-def go(r, c, t):
-    global pos, ans
-    if t == L-1:
-        return
-    for d in pipe[grid[r][c]]:
-        nr = r+dr[d]
-        nc = c+dc[d]
-
-        if not (0 <= nr < N and 0 <= nc < M):
-            continue
-        if pos[nr][nc]:
-            continue
-        if grid[nr][nc] == 0:
-            continue
-        if (d+2) % 4 not in pipe[grid[nr][nc]]:
-            continue
-        pos[nr][nc] = 1
-        ans += 1
-        go(nr, nc, t+1)
-
 T = int(input())
 for tc in range(1, T+1):
     N, M, R, C, L = map(int, input().split())
@@ -40,7 +22,30 @@ for tc in range(1, T+1):
     ans = 1
     pos = [[0]*M for _ in range(N)]
     pos[R][C] = 1
-    go(R, C, 0)
+
+    q = deque()
+    q.append((R, C, 0))
+
+    while q:
+        cr, cc, t = q.popleft()
+        if t == L-1:
+            continue
+        for d in pipe[grid[cr][cc]]:
+            nr = cr+dr[d]
+            nc = cc+dc[d]
+            if not (0 <= nr < N and 0 <= nc < M):
+                continue
+            if grid[nr][nc] == 0:
+                continue
+            if (d+2) % 4 not in pipe[grid[nr][nc]]:
+                continue
+            if pos[nr][nc]:
+                continue
+
+            pos[nr][nc] = 1
+            ans += 1    
+            q.append((nr, nc, t+1))   
+
     print(f'#{tc} {ans}')
 
 
@@ -67,6 +72,18 @@ for tc in range(1, T+1):
 좌로 이동할경우
 - 좌방향 터널이 우 있는지 확인
 - 1, 3, 4, 5
-
+2
+5 6 2 1 3
+0 0 5 3 6 0
+0 0 2 0 2 0
+3 3 1 3 7 0
+0 0 0 0 0 0
+0 0 0 0 0 0
+5 6 2 2 6
+3 0 0 0 0 3
+2 0 0 0 0 6
+1 3 1 1 3 1
+2 0 2 0 0 2
+0 0 4 3 1 1
 
 """
