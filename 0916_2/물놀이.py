@@ -3,39 +3,36 @@ from collections import deque
 dr = [0, 1, 0, -1]
 dc = [1, 0, -1, 0]
 
-def go(sr, sc, st):
-    visited = [[0]*M for _ in range(N)]
-    visited[sr][sc] = 1
-
+T = int(input())
+for tc in range(1, T + 1):
+    N, M = map(int, input().split())
+    grid = [list(input()) for _ in range(N)]
+    dist = [[-1] * M for _ in range(N)]
     q = deque()
-    q.append((sr, sc, st))
+    for r in range(N):
+        for c in range(M):
+            if grid[r][c] == 'W':
+                dist[r][c] = 0
+                q.append((r, c))
 
     while q:
-        r, c, t = q.popleft()
-        for w in range(4):
-            nr = r+dr[w]
-            nc = c+dc[w]
-            if not ((0<=nr<N) and (0<=nc<M)):
+        r, c = q.popleft()
+        for d in range(4):
+            nr = r + dr[d]
+            nc = c + dc[d]
+            if not (0 <= nr < N and 0 <= nc < M):
                 continue
-            if visited[nr][nc] == 1:
+            if dist[nr][nc] != -1:
                 continue
-            if grid[nr][nc] == 'W':
-                return t+1
-            visited[nr][nc] = 1
-            q.append((nr, nc, t+1))
+            dist[nr][nc] = dist[r][c] + 1
+            q.append((nr, nc))
 
-
-T = int(input())
-for tc in range(1, T+1):
-    N, M = map(int, input().split())
-    grid = []
     ans = 0
-    for _ in range(N):
-        grid.append(list(input()))
+
     for r in range(N):
         for c in range(M):
             if grid[r][c] == 'L':
-                ans += go(r, c, 0)
+                ans += dist[r][c]
     print(f'#{tc} {ans}')
 
 
