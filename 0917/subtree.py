@@ -1,29 +1,37 @@
-def preorder(t):
-        global count
-        if t:
+def go(n):
+    count = 1
+    stack = []
+    if tree[0][n]:
+        count += 1
+        stack.append(tree[0][n])
+    if tree[1][n]:
+        count += 1
+        stack.append(tree[1][n])
+    while stack:
+        j = stack.pop()
+        if tree[0][j]:
             count += 1
-            preorder(left[t])
-            preorder(right[t])
+            stack.append(tree[0][j])
+        if tree[1][j]:
+            count += 1
+            stack.append(tree[1][j]) 
 
+    return count   
 
 T = int(input())
 for tc in range(1, T+1):
     E, N = map(int, input().split())
-    V = E+1
-    left = [0] * (V+1)
-    right = [0] * (V+1)
-    tree = list(map(int, input().split()))
+    temp = list(map(int, input().split()))
+    tree = [[0]*(max(temp)+1) for _ in range(2)]
     for i in range(E):
-        p = tree[i*2]
-        c = tree[i*2+1]
-        if left[p] == 0: # 왼쪽 자식 없으면
-            left[p] = c
+        bumo = temp[i*2]
+        jasik = temp[i*2+1]
+        if not tree[0][bumo]:
+            tree[0][bumo] = jasik
         else:
-            right[p] = c
-
-    count = 0
-    preorder(N)
-    print(f'#{tc} {count}')
+            tree[1][bumo] = jasik
+    ans = go(N)
+    print(f'#{tc} {ans}')
 
 
 """
