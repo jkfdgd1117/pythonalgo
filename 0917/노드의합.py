@@ -1,13 +1,23 @@
 def go(target):
-    global ans
     if target > N:
-        return
-    if not data[target]:
-        data[target*2]
-        data[target*2+1]
-    else:
-        ans += data[target]
+        return 0
+    if data[target]:
+        return data[target]
+    return go(target*2) + go(target*2+1)
 
+# T = int(input())
+
+# for tc in range(1, T+1):
+#     N, M, L = map(int, input().split())
+#     data = [0]*(N+1)
+#     for _ in range(M):
+#         tindex, tdata = map(int, input().split())
+#         data[tindex] = tdata
+#     data.append(0)
+#     for i in range(N-(N%2), 1, -2):
+#         data[i//2] = data[i]+data[i+1]
+#     print(f'#{tc} {data[L]}')
+    
 T = int(input())
 
 for tc in range(1, T+1):
@@ -16,11 +26,9 @@ for tc in range(1, T+1):
     for _ in range(M):
         tindex, tdata = map(int, input().split())
         data[tindex] = tdata
-    ans = 0
-    go(L)
-    print(f'#{tc} {ans}')
+    data.append(0)
+    print(f'#{tc} {go(L)}')
     
-
 
 
 
