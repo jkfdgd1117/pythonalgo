@@ -1,32 +1,29 @@
-def go(lsum, rsum, now, remain):
+def go(weights, now, remain):
     global ans
-    k = N - now
-    if lsum < rsum:
+    if weights >= remain:
+        k = N - now
+        ans += factorial[k] * power2[k]
         return
-    if lsum - rsum >= remain:
-        ans += factorial[k] * (2 ** k)
-        return
-    if now == N:
-        ans += 1
-        return
-    for i in range(N):
-        if not visited[i]:
-            visited[i] = True
-            go(lsum+chus[i], rsum, now+1, remain-chus[i])
-            go(lsum, rsum+chus[i], now+1, remain-chus[i])
-            visited[i] = False
+    for i in range(now, N):
+        w = chus[i]
+        chus[now], chus[i] = chus[i], chus[now]
+        go(weights+w, now+1, remain-w)
+        if weights >= w:
+            go(weights-w, now+1, remain-w)
+        chus[now], chus[i] = chus[i], chus[now]
 
 factorial = [1]
+power2 = [1]
 for i in range(1, 10):
-    factorial.append(factorial[-1] * i)
+    factorial.append(factorial[-1]*i)
+    power2.append(power2[-1]*2)
 
 T = int(input())
 for tc in range(1, T+1):
     N = int(input())
     chus = list(map(int, input().split()))
     ans = 0
-    visited = [False]*N
-    go(0, 0, 0, sum(chus))
+    go(0, 0, sum(chus))
     print(f'#{tc} {ans}')
 
 
@@ -55,5 +52,7 @@ Lsum < Rsum 되면 return
 일단 인자로 몇개 놨는지는 넘겨야함
 lsum rsum도 인자로 넘기기?
 
-0들은 순서가 상관없는데 일일히 세는 문제가있음
+lsum - rsum 을 weights로 치환해서 하나로 넘김
+
+remain도 넘김
 """
