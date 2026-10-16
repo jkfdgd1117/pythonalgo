@@ -1,10 +1,11 @@
 def go(day):
-    global ans
+    global ans, anju
+    if trees.count(target+1):
+        return
     if day >= ans:
         return
     if trees.count(target) == N:
-        ans = day
-        print(trees, day)
+        ans = day-1
         return
     if day % 2:
         grow = 1
@@ -12,9 +13,13 @@ def go(day):
         grow = 2
     for i in range(N+1):
         if i != N:
-            if trees[i] >= target:
+            if trees[i] == target:
                 continue
-        
+            if trees[i] > target:
+                return
+        if i == N:
+            if anju:
+                continue
         trees[i] += grow
         if i == N:
             anju = True
@@ -30,7 +35,6 @@ for tc in range(1, T+1):
     N = int(input())
     trees = list(map(int, input().split()))
     target = max(trees)
-    limit = 240
     trees.append(1557)
     ans = float('inf')
     anju = False
@@ -45,7 +49,7 @@ for tc in range(1, T+1):
 
 
 """
-5
+10
 2
 5 5
 2
