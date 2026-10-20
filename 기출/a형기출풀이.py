@@ -1,11 +1,15 @@
 T = int(input())
 for tc in range(1, T+1):
     N, M, K = map(int, input().split())
-    wrong = N-M
+    x = N-M
     # 두배이벤트 횟수
-    q = max(0, (M-wrong*(K-1))//K)
-    # 기본 점수 + 두배이벤트 추가 점수
-    ans = M+K*(2**(q+1)-q-2)
+    cnt = max(0, ((N//K)-x))
+    # B 수열 = 두배이벤트로 벌리는 점수들
+    B = [0] * (cnt+1)
+    for i in range(1, cnt+1):
+        B[i] = (B[i-1]+K)*2
+    ans = B[cnt]+(M-cnt*K)
+    
     print(f'#{tc} {ans}')
 
 
@@ -52,6 +56,13 @@ A[i] = (A[i-1]+1)*2
 B[i] = B[i-1]+2**i
 해서 k와 N에 따른 B수열을 만들어 놨다가 N문제 전부 맞췄을때 기댓값에서 N-M만큼 B수열 pop해가지고 빼면 
 답이나올거같음
+
+정답 나오는 식을 만들어봅시다 
+다 맞췄다고 가정했을때 원래 두배이벤트 받는 횟수는 N//k번 인데
+틀린횟수 x 라고 하면 
+두배이벤트 받는 횟수는 N//k - x
+
+일단 M문제는 맞췄으니 
 
 
 """
